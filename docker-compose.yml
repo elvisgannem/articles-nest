@@ -7,8 +7,6 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
     container_name: postgres
-    volumes:
-      - ${POSTGRES_DATA_PATH}:/var/lib/postgresql
     ports:
       - '${POSTGRES_PORT}:5432'
 
