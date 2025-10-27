@@ -11,9 +11,11 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '../../dto/user.dto';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
+import { RoleGuard, Roles } from '../../shared/guards/role.guard';
 
 @Controller('users')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RoleGuard)
+@Roles('admin')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

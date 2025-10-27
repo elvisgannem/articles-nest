@@ -12,13 +12,15 @@ import {
 import { ArticleService } from './article.service';
 import { CreateArticleDto, UpdateArticleDto } from '../../dto/article.dto';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
+import { RoleGuard, Roles } from '../../shared/guards/role.guard';
 
 @Controller('articles')
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles('admin', 'editor')
   create(@Body() createArticleDto: CreateArticleDto, @Request() req) {
     return this.articleService.create(createArticleDto, req.user.userId);
   }
@@ -29,7 +31,8 @@ export class ArticleController {
   }
 
   @Get('my-articles')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles('admin', 'editor', 'reader')
   findMyArticles(@Request() req) {
     return this.articleService.findByAuthor(req.user.userId);
   }
@@ -40,13 +43,15 @@ export class ArticleController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles('admin', 'editor')
   update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto, @Request() req) {
     return this.articleService.update(+id, updateArticleDto, req.user.userId);
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles('admin', 'editor')
   remove(@Param('id') id: string, @Request() req) {
     return this.articleService.remove(+id, req.user.userId);
   }

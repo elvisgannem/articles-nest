@@ -1,5 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, ManyToMany, OneToMany } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Permission } from './permission.entity';
+import { Article } from './article.entity';
 
 @Entity('users')
 export class User {
@@ -20,6 +22,12 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToMany(() => Permission, permission => permission.users)
+  permissions: Permission[];
+
+  @OneToMany(() => Article, article => article.author)
+  articles: Article[];
 
   @BeforeInsert()
   async hashPassword() {
